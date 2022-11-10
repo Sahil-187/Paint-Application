@@ -15,7 +15,6 @@ void floodfill(int x,int y,int oldcolor,int newcolor) {
    putpixel(x,y,newcolor);
    for(int i = 0; i < 4; i++) {
     int nx = x+dx[i],ny = y + dy[i];
-    cout<<nx<<" "<<ny<<endl;
     if(valid(nx,ny) && getpixel(nx,ny)==oldcolor) {
         floodfill(nx,ny,oldcolor,newcolor);
     }
@@ -32,15 +31,13 @@ void initial_screen() {
   //line right 
   line(max_x-1,0,max_x-1,width);
   //colour of top_box
-  floodfill(1,1,YELLOW);
+//   floodfill(1,1,BLACK,WHITE);
 }
 
 int main(int argc, char const *argv[])
 {
     max_x = GetSystemMetrics(SM_CXSCREEN);
     max_y = GetSystemMetrics(SM_CYSCREEN);
-    max_x -=100;
-    max_y-=100;
     initwindow(max_x,max_y,"My Paint",-3,-3);
     initial_screen();
     getch();
