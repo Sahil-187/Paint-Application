@@ -5,33 +5,12 @@ using namespace std;
 int max_x;
 int max_y;
 
-bool valid(int x,int y) {
-    return (x>= 0 && y >= 0 && x < max_x && y < max_y);
-}
 
-vector<int> dx = {0,0,-1,1};
-vector<int> dy = {-1,1,0,0};
-void floodfill(int x,int y,int oldcolor,int newcolor) {
-   putpixel(x,y,newcolor);
-   for(int i = 0; i < 4; i++) {
-    int nx = x+dx[i],ny = y + dy[i];
-    if(valid(nx,ny) && getpixel(nx,ny)==oldcolor) {
-        floodfill(nx,ny,oldcolor,newcolor);
-    }
-   }
-}
 void initial_screen() {
     int width = .13*max_y;
-  //line top
-  line(0,0,max_x,0);
-  //line left
-  line(0,0,0,width);
-  //line buttom
-  line(0,width,max_x-1,width);
-  //line right 
-  line(max_x-1,0,max_x-1,width);
-  //colour of top_box
-//   floodfill(1,1,BLACK,WHITE);
+    setfillstyle(SOLID_FILL,LIGHTGRAY);
+    rectangle(0,0,max_x-1,width);
+    floodfill(2,2,LIGHTGRAY);
 }
 
 int main(int argc, char const *argv[])
