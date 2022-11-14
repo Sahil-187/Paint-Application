@@ -94,8 +94,8 @@ void drawToolBox() {
     }
     toolbox_xi = t[0].start.first;
     toolbox_yi = t[0].start.second;
-    toolbox_xf = t[2].end.first;
-    toolbox_yf = t[2].end.second;
+    toolbox_xf = t[5].end.first;
+    toolbox_yf = t[5].end.second;
 }
 
 int selectedTool(int x, int y) {
@@ -251,6 +251,10 @@ int main() {
                     selectedColor(x1, y1);
                     clearmouseclick(WM_LBUTTONDOWN);
                 }
+                else if(insideToolBox(x1,y1)) {
+                    choice = selectedTool(x1,y1)+1;
+                    cout<<choice<<endl;
+                }
                 //  else if (true) {
                 //     choice = 1;  // circle
                 // } else if (true) {
@@ -260,6 +264,7 @@ int main() {
                 // } else if (true) {
                 //     choice = 4;  // brush
                 // }
+
             }
         }
 
