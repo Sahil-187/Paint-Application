@@ -316,8 +316,8 @@ int main() {
                     initial_screen();
                     initial_drawing_area();
                     display_buttons();
-                } else {
-                    writeimagefile((char *)("save.jpg"));
+                } else if (insideButtons(x1, y1) == 4) {
+                    writeimagefile((char *)("save.jpg"), 0, 100, max_x, max_y);
                     delay(500);
                     cleardevice();
                     initial_screen();
@@ -372,7 +372,7 @@ int main() {
             // brush
             if (GetAsyncKeyState(VK_LBUTTON)) {
                 x2 = Cursor.x, y2 = Cursor.y;
-                int tsize = size;
+                int tsize = size / 2;
                 if (y2 - tsize <= 100) continue;
                 while (tsize--) {
                     circle(x2, y2, tsize);
