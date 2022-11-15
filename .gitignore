@@ -1,3 +1,4 @@
 *.exe
 *.jpg
 .gitignore
+.vscode
