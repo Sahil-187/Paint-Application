@@ -13,7 +13,8 @@ int toolbox_yi;
 int toolbox_xf;
 int toolbox_yf;
 POINT Cursor;
-int size = 10;
+int size = 20;
+// int curColor = BLACK;
 
 struct tool {
     pair<int, int> start;
@@ -94,8 +95,8 @@ void drawToolBox() {
     }
     toolbox_xi = t[0].start.first;
     toolbox_yi = t[0].start.second;
-    toolbox_xf = t[2].end.first;
-    toolbox_yf = t[2].end.second;
+    toolbox_xf = t[5].end.first;
+    toolbox_yf = t[5].end.second;
 }
 
 int selectedTool(int x, int y) {
@@ -145,6 +146,12 @@ void SelectedColorBox(int n) {
     setcolor(n);
     rectangle(20, 20, 80, 80);
     floodfill(21, 21, n);
+
+    setcolor(BLACK);
+    if (n == BLACK) setcolor(WHITE);
+    rectangle(20, 20, 80, 80);
+
+    setcolor(n);
 }
 
 struct color {
@@ -170,7 +177,7 @@ struct color {
 
 vector<color> v(16);
 void drawColorBox() {
-    int _x = 90;
+    int _x = 100;
     int width = 30;
     int j = 0;
     for (int i = 0; i < 8; i++) {
@@ -212,48 +219,111 @@ void initial_screen() {
     setfillstyle(SOLID_FILL, LIGHTGRAY);
     floodfill(1, 1, LIGHTGRAY);
 
-    setcolor(WHITE);
-    setfillstyle(SOLID_FILL, WHITE);
-    rectangle(0, width, max_x - 1, max_y - 27);
-    floodfill(2, width + 5, WHITE);
+    int old = getcolor();
+    setbkcolor(LIGHTGRAY);
+    setcolor(BLACK);
+    settextstyle(8, VERT_DIR, 1);
+    outtextxy(390, 22, (char *)"TOOLS");
+    line(0, 98, max_x, 98);
+    setcolor(old);
 
     SelectedColorBox(BLACK);
     drawColorBox();
     drawToolBox();
 }
 
+void initial_drawing_area() {
+    int width = 100;
+    setcolor(WHITE);
+    setfillstyle(SOLID_FILL, WHITE);
+    rectangle(0, width, max_x - 1, max_y - 1);
+    floodfill(2, width + 5, WHITE);
+}
+
+void display_buttons() {
+    setbkcolor(LIGHTGRAY);
+    setcolor(BLACK);
+    settextstyle(8, HORIZ_DIR, 1);
+    outtextxy(1300, 35, (char *)("SIZE: " + to_string(size)).c_str());
+    rectangle(1220, 45, 1245, 75);
+    floodfill(1221, 46, BLACK);
+    line(1225, 60, 1240, 60);
+    line(1232, 53, 1232, 67);
+    rectangle(1265, 45, 1290, 75);
+    floodfill(1266, 46, BLACK);
+    line(1270, 60, 1285, 60);
+
+    setbkcolor(WHITE);
+    rectangle(560, 20, 620, 80);
+    floodfill(561, 21, BLACK);
+    outtextxy(617, 60, (char *)("CLEAR"));
+    rectangle(640, 20, 700, 80);
+    floodfill(641, 21, BLACK);
+    outtextxy(692, 60, (char *)("SAVE"));
+}
+
+void increase_size() {
+    size += 10;
+    initial_screen();
+    display_buttons();
+}
+
+void decrease_size() {
+    if (size > 10) size -= 10;
+    initial_screen();
+    display_buttons();
+}
+
+int insideButtons(int x, int y) {
+    if (x >= 1220 && x <= 1245 && y >= 45 && y <= 75) return 1;
+    if (x >= 1265 && x <= 1290 && y >= 45 && y <= 75) return 2;
+    if (x >= 560 && x <= 620 && y >= 20 && y <= 80) return 3;
+    if (x >= 640 && x <= 700 && y >= 20 && y <= 80) return 4;
+    return 0;
+}
+
 int main() {
     max_x = GetSystemMetrics(SM_CXSCREEN);
     max_y = GetSystemMetrics(SM_CYSCREEN);
-    initwindow(max_x, max_y, "My Paint", -3, 0);
+    initwindow(max_x, max_y, "Paint - By Akshat & Sahil", -3, 0);
     initial_screen();
+    initial_drawing_area();
+    display_buttons();
 
     int x1 = -1, x2 = -1, y1 = -1, y2 = -1, choice = 4;
     while (true) {
         GetCursorPos(&Cursor);
         ScreenToClient(GetForegroundWindow(), &Cursor);
-        // int x = Cursor.x, y = Cursor.y;
 
         if (ismouseclick(WM_LBUTTONDOWN)) {
             x1 = Cursor.x, y1 = Cursor.y;
             clearmouseclick(WM_LBUTTONDOWN);
-            // cout << x1 << ", " << y1 << endl;
 
             if (!insideDrawingArea(x1, y1)) {
                 // choice
                 if (insideColorBox(x1, y1)) {
                     selectedColor(x1, y1);
                     clearmouseclick(WM_LBUTTONDOWN);
+                } else if (insideToolBox(x1, y1)) {
+                    choice = selectedTool(x1, y1) + 1;
+                    initial_screen();
+                } else if (insideButtons(x1, y1) == 1) {
+                    increase_size();
+                } else if (insideButtons(x1, y1) == 2) {
+                    decrease_size();
+                } else if (insideButtons(x1, y1) == 3) {
+                    cleardevice();
+                    initial_screen();
+                    initial_drawing_area();
+                    display_buttons();
+                } else {
+                    writeimagefile((char *)("save.jpg"));
+                    delay(500);
+                    cleardevice();
+                    initial_screen();
+                    initial_drawing_area();
+                    display_buttons();
                 }
-                //  else if (true) {
-                //     choice = 1;  // circle
-                // } else if (true) {
-                //     choice = 2;  // line
-                // } else if (true) {
-                //     choice = 3;  // rectangle
-                // } else if (true) {
-                //     choice = 4;  // brush
-                // }
             }
         }
 
@@ -269,6 +339,8 @@ int main() {
 
                 int cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
                 int r = sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) / 2;
+                if (cy <= 100) continue;
+                if (cy - r <= 100) r = cy - 100;
                 cout << "Circle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]: (" << cx << ", " << cy << "), r = " << r << '\n';
                 circle(cx, cy, r);
             }
@@ -281,7 +353,7 @@ int main() {
                 clearmouseclick(WM_LBUTTONUP);
 
                 cout << "Line [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
-                line(x1, y1, x2, y2);
+                line(x1, max(y1, 101), x2, max(y2, 101));
             }
             break;
         }
@@ -292,7 +364,7 @@ int main() {
                 clearmouseclick(WM_LBUTTONUP);
 
                 cout << "Rectangle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
-                drawRectangle(x1, y1, x2, y2);
+                drawRectangle(x1, max(y1, 101), x2, max(y2, 101));
             }
             break;
         }
@@ -301,6 +373,7 @@ int main() {
             if (GetAsyncKeyState(VK_LBUTTON)) {
                 x2 = Cursor.x, y2 = Cursor.y;
                 int tsize = size;
+                if (y2 - tsize <= 100) continue;
                 while (tsize--) {
                     circle(x2, y2, tsize);
                 }
@@ -308,9 +381,26 @@ int main() {
             break;
         }
         case 5: {
+            // flood fill
             if (GetAsyncKeyState(VK_LBUTTON)) {
-                floodfill(Cursor.x, Cursor.y, BLACK);
+                if (Cursor.y <= 100) continue;
+                floodfill(Cursor.x, Cursor.y, BLACK);  // no floodfill on black
             }
+            break;
+        }
+        case 6: {
+            // eraser
+            int old = getcolor();
+            setcolor(WHITE);
+            if (GetAsyncKeyState(VK_LBUTTON)) {
+                x2 = Cursor.x, y2 = Cursor.y;
+                int tsize = size;
+                if (y2 - tsize / 2 < 100) continue;
+                while (tsize--) {
+                    rectangle(x2 - tsize / 2, y2 - tsize / 2, x2 + tsize / 2, y2 + tsize / 2);
+                }
+            }
+            setcolor(old);
             break;
         }
         }
