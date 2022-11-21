@@ -449,6 +449,10 @@ int main() {
             if (ismouseclick(WM_LBUTTONUP)) {
                 x2 = Cursor.x, y2 = Cursor.y;
                 clearmouseclick(WM_LBUTTONUP);
+                if (x2 == x1 && y2 == y1) {
+                    drawCar(x1 - 88, y1 - 40);
+                    break;
+                }
 
                 initial_drawing_area();
                 setcolor(COLOR(163, 167, 176));
