@@ -233,6 +233,7 @@ void initial_screen() {
 }
 
 void initial_drawing_area() {
+    int old = getcolor();
     int width = 100;
     // int col = COLOR(163, 167, 176);
     int col = WHITE;
@@ -240,6 +241,7 @@ void initial_drawing_area() {
     setfillstyle(SOLID_FILL, col);
     rectangle(0, width, max_x - 1, max_y - 1);
     floodfill(2, width + 5, col);
+    setcolor(old);
 }
 
 void display_buttons() {
@@ -262,7 +264,7 @@ void display_buttons() {
     rectangle(640, 20, 700, 80);
     floodfill(641, 21, BLACK);
     outtextxy(692, 60, (char *)("SAVE"));
-    rectangle(720,20,780,80);
+    rectangle(720, 20, 780, 80);
     floodfill(721, 21, BLACK);
     outtextxy(767, 60, (char *)("CAR"));
 }
@@ -284,32 +286,37 @@ int insideButtons(int x, int y) {
     if (x >= 1265 && x <= 1290 && y >= 45 && y <= 75) return 2;
     if (x >= 560 && x <= 620 && y >= 20 && y <= 80) return 3;
     if (x >= 640 && x <= 700 && y >= 20 && y <= 80) return 4;
+    if (x >= 720 && x <= 780 && y >= 20 && y <= 80) return 5;
     return 0;
 }
 
-void drawCar(int x,int y) {
+void drawCar(int x, int y) {
+    if (x < 0 || x > max_x - 176 || y <= 100 || y > max_y - 145) return;
     int old = getcolor();
     setcolor(BLACK);
-    setfillstyle(SOLID_FILL,BLACK);
-    circle(x+47,y+95,27);
-    circle(x+129,y+95,27);
-    floodfill(x+47,y+95,BLACK);
-    floodfill(x+129,y+95,BLACK);
-    rectangle(x,y+40,x+176,y+95);
+    setfillstyle(SOLID_FILL, BLACK);
+    circle(x + 47, y + 95, 25);
+    circle(x + 129, y + 95, 25);
+    floodfill(x + 47, y + 95, BLACK);
+    floodfill(x + 129, y + 95, BLACK);
+    rectangle(x, y + 40, x + 176, y + 95);
+    setfillstyle(SOLID_FILL, YELLOW);
+    floodfill(x + 1, y + 41, BLACK);
+    setfillstyle(SOLID_FILL, BLACK);
     setcolor(BLACK);
-    setfillstyle(SOLID_FILL,BLACK);
-    line(x+20,y+40,x+40,y);
-    line(x+24,y+40,x+44,y+4);
-    line(x+156,y+40,x+136,y);
-    line(x+152,y+40,x+132,y+4);
-    line(x+40,y,x+136,y);
-    line(x+44,y+4,x+86,y+4);
-    line(x+90,y+4,x+132,y+4);
-    line(x+86,y+4,x+86,y+40);
-    line(x+90,y+4,x+90,y+40);
-    floodfill(x+21,y+39,BLACK);
+    line(x + 20, y + 40, x + 40, y);
+    line(x + 24, y + 40, x + 44, y + 4);
+    line(x + 156, y + 40, x + 136, y);
+    line(x + 152, y + 40, x + 132, y + 4);
+    line(x + 40, y, x + 136, y);
+    line(x + 44, y + 4, x + 86, y + 4);
+    line(x + 90, y + 4, x + 132, y + 4);
+    line(x + 86, y + 4, x + 86, y + 40);
+    line(x + 90, y + 4, x + 90, y + 40);
+    floodfill(x + 21, y + 39, BLACK);
     setcolor(old);
 }
+
 int main() {
     max_x = GetSystemMetrics(SM_CXSCREEN);
     max_y = GetSystemMetrics(SM_CYSCREEN);
@@ -317,7 +324,7 @@ int main() {
     initial_screen();
     initial_drawing_area();
     display_buttons();
-    drawCar(300,300);
+
     int x1 = -1, x2 = -1, y1 = -1, y2 = -1, choice = 4;
     while (true) {
         GetCursorPos(&Cursor);
@@ -345,12 +352,14 @@ int main() {
                     initial_drawing_area();
                     display_buttons();
                 } else if (insideButtons(x1, y1) == 4) {
-                    writeimagefile((char *)("save.jpg"), 0, 100, max_x, max_y);
+                    writeimagefile((char *)("save.jpg"), 0, 100, max_x - 1, max_y - 1);
                     delay(500);
                     cleardevice();
                     initial_screen();
                     initial_drawing_area();
                     display_buttons();
+                } else if (insideButtons(x1, y1) == 5) {
+                    choice = 7;
                 }
             }
         }
@@ -432,6 +441,37 @@ int main() {
                 }
             }
             setcolor(old);
+            break;
+        }
+        case 7: {
+            // car
+
+            if (ismouseclick(WM_LBUTTONUP)) {
+                x2 = Cursor.x, y2 = Cursor.y;
+                clearmouseclick(WM_LBUTTONUP);
+
+                initial_drawing_area();
+                setcolor(COLOR(163, 167, 176));
+                line(0, 98, max_x, 98);
+
+                int delta_x = x2 - x1, delta_y = y2 - y1;
+                int steps = max(abs(delta_x), abs(delta_y));
+                float dx = delta_x / (float)steps;
+                float dy = delta_y / (float)steps;
+                float x = x1, y = y1;
+
+                for (int i = 0; i <= steps; ++i) {
+                    drawCar(round(x) - 88, round(y) - 40);
+                    delay(1);  // to see line being drawn
+                    x += dx;
+                    y += dy;
+
+                    setfillstyle(SOLID_FILL, WHITE);
+                    rectangle(0, 100, max_x - 1, max_y - 1);
+                    floodfill(2, 105, COLOR(163, 167, 176));
+                }
+                drawCar(round(x) - 88, round(y) - 40);
+            }
             break;
         }
         }
