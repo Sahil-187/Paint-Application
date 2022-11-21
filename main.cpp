@@ -262,6 +262,9 @@ void display_buttons() {
     rectangle(640, 20, 700, 80);
     floodfill(641, 21, BLACK);
     outtextxy(692, 60, (char *)("SAVE"));
+    rectangle(720,20,780,80);
+    floodfill(721, 21, BLACK);
+    outtextxy(767, 60, (char *)("CAR"));
 }
 
 void increase_size() {
