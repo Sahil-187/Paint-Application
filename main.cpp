@@ -287,6 +287,29 @@ int insideButtons(int x, int y) {
     return 0;
 }
 
+void drawCar(int x,int y) {
+    int old = getcolor();
+    setcolor(BLACK);
+    setfillstyle(SOLID_FILL,BLACK);
+    circle(x+47,y+95,27);
+    circle(x+129,y+95,27);
+    floodfill(x+47,y+95,BLACK);
+    floodfill(x+129,y+95,BLACK);
+    rectangle(x,y+40,x+176,y+95);
+    setcolor(BLACK);
+    setfillstyle(SOLID_FILL,BLACK);
+    line(x+20,y+40,x+40,y);
+    line(x+24,y+40,x+44,y+4);
+    line(x+156,y+40,x+136,y);
+    line(x+152,y+40,x+132,y+4);
+    line(x+40,y,x+136,y);
+    line(x+44,y+4,x+86,y+4);
+    line(x+90,y+4,x+132,y+4);
+    line(x+86,y+4,x+86,y+40);
+    line(x+90,y+4,x+90,y+40);
+    floodfill(x+21,y+39,BLACK);
+    setcolor(old);
+}
 int main() {
     max_x = GetSystemMetrics(SM_CXSCREEN);
     max_y = GetSystemMetrics(SM_CYSCREEN);
@@ -294,7 +317,7 @@ int main() {
     initial_screen();
     initial_drawing_area();
     display_buttons();
-
+    drawCar(300,300);
     int x1 = -1, x2 = -1, y1 = -1, y2 = -1, choice = 4;
     while (true) {
         GetCursorPos(&Cursor);
