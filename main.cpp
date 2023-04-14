@@ -320,7 +320,7 @@ void drawCar(int x, int y) {
 int main() {
     max_x = GetSystemMetrics(SM_CXSCREEN);
     max_y = GetSystemMetrics(SM_CYSCREEN);
-    initwindow(max_x, max_y, "Paint - By Akshat, Sahil & Tanveer", -3, 0);
+    initwindow(max_x, max_y, "Paint - By Akshat and Sahil", -3, 0);
     initial_screen();
     initial_drawing_area();
     display_buttons();
@@ -365,119 +365,119 @@ int main() {
         }
 
         switch (choice) {
-        case 0: {
-            break;
-        }
-        case 1: {
-            // circle
-            if (ismouseclick(WM_LBUTTONUP)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                clearmouseclick(WM_LBUTTONUP);
-
-                int cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
-                int r = sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) / 2;
-                if (cy <= 100) continue;
-                if (cy - r <= 100) r = cy - 100;
-                cout << "Circle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]: (" << cx << ", " << cy << "), r = " << r << '\n';
-                circle(cx, cy, r);
-                // circle(cx, cy + 1, r);
+            case 0: {
+                break;
             }
-            break;
-        }
-        case 2: {
-            // line
-            if (ismouseclick(WM_LBUTTONUP)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                clearmouseclick(WM_LBUTTONUP);
+            case 1: {
+                // circle
+                if (ismouseclick(WM_LBUTTONUP)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    clearmouseclick(WM_LBUTTONUP);
 
-                cout << "Line [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
-                line(x1, max(y1, 101), x2, max(y2, 101));
-                // line(x1, max(y1 + 1, 101), x2, max(y2 + 1, 101));
-            }
-            break;
-        }
-        case 3: {
-            // rectangle
-            if (ismouseclick(WM_LBUTTONUP)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                clearmouseclick(WM_LBUTTONUP);
-
-                cout << "Rectangle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
-                drawRectangle(x1, max(y1, 101), x2, max(y2, 101));
-                // drawRectangle(x1, max(y1 + 1, 101), x2, max(y2 + 1, 101));
-            }
-            break;
-        }
-        case 4: {
-            // brush
-            if (GetAsyncKeyState(VK_LBUTTON)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                int tsize = size / 2;
-                if (y2 - tsize <= 100) continue;
-                while (tsize--) {
-                    circle(x2, y2, tsize);
+                    int cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
+                    int r = sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) / 2;
+                    if (cy <= 100) continue;
+                    if (cy - r <= 100) r = cy - 100;
+                    cout << "Circle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]: (" << cx << ", " << cy << "), r = " << r << '\n';
+                    circle(cx, cy, r);
+                    // circle(cx, cy + 1, r);
                 }
+                break;
             }
-            break;
-        }
-        case 5: {
-            // flood fill
-            if (GetAsyncKeyState(VK_LBUTTON)) {
-                if (Cursor.y <= 100) continue;
-                floodfill(Cursor.x, Cursor.y, BLACK);  // no floodfill on black
-            }
-            break;
-        }
-        case 6: {
-            // eraser
-            int old = getcolor();
-            setcolor(WHITE);
-            if (GetAsyncKeyState(VK_LBUTTON)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                int tsize = size;
-                if (y2 - tsize / 2 < 100) continue;
-                while (tsize--) {
-                    rectangle(x2 - tsize / 2, y2 - tsize / 2, x2 + tsize / 2, y2 + tsize / 2);
+            case 2: {
+                // line
+                if (ismouseclick(WM_LBUTTONUP)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    clearmouseclick(WM_LBUTTONUP);
+
+                    cout << "Line [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
+                    line(x1, max(y1, 101), x2, max(y2, 101));
+                    // line(x1, max(y1 + 1, 101), x2, max(y2 + 1, 101));
                 }
+                break;
             }
-            setcolor(old);
-            break;
-        }
-        case 7: {
-            // car
+            case 3: {
+                // rectangle
+                if (ismouseclick(WM_LBUTTONUP)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    clearmouseclick(WM_LBUTTONUP);
 
-            if (ismouseclick(WM_LBUTTONUP)) {
-                x2 = Cursor.x, y2 = Cursor.y;
-                clearmouseclick(WM_LBUTTONUP);
-                if (x2 == x1 && y2 == y1) {
-                    drawCar(x1 - 88, y1 - 40);
-                    break;
+                    cout << "Rectangle [(" << x1 << ", " << y1 << ") (" << x2 << ", " << y2 << ")]\n";
+                    drawRectangle(x1, max(y1, 101), x2, max(y2, 101));
+                    // drawRectangle(x1, max(y1 + 1, 101), x2, max(y2 + 1, 101));
                 }
+                break;
+            }
+            case 4: {
+                // brush
+                if (GetAsyncKeyState(VK_LBUTTON)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    int tsize = size / 2;
+                    if (y2 - tsize <= 100) continue;
+                    while (tsize--) {
+                        circle(x2, y2, tsize);
+                    }
+                }
+                break;
+            }
+            case 5: {
+                // flood fill
+                if (GetAsyncKeyState(VK_LBUTTON)) {
+                    if (Cursor.y <= 100) continue;
+                    floodfill(Cursor.x, Cursor.y, BLACK);  // no floodfill on black
+                }
+                break;
+            }
+            case 6: {
+                // eraser
+                int old = getcolor();
+                setcolor(WHITE);
+                if (GetAsyncKeyState(VK_LBUTTON)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    int tsize = size;
+                    if (y2 - tsize / 2 < 100) continue;
+                    while (tsize--) {
+                        rectangle(x2 - tsize / 2, y2 - tsize / 2, x2 + tsize / 2, y2 + tsize / 2);
+                    }
+                }
+                setcolor(old);
+                break;
+            }
+            case 7: {
+                // car
 
-                initial_drawing_area();
-                setcolor(COLOR(163, 167, 176));
-                line(0, 98, max_x, 98);
+                if (ismouseclick(WM_LBUTTONUP)) {
+                    x2 = Cursor.x, y2 = Cursor.y;
+                    clearmouseclick(WM_LBUTTONUP);
+                    if (x2 == x1 && y2 == y1) {
+                        drawCar(x1 - 88, y1 - 40);
+                        break;
+                    }
 
-                int delta_x = x2 - x1, delta_y = y2 - y1;
-                int steps = max(abs(delta_x), abs(delta_y));
-                float dx = delta_x / (float)steps;
-                float dy = delta_y / (float)steps;
-                float x = x1, y = y1;
+                    initial_drawing_area();
+                    setcolor(COLOR(163, 167, 176));
+                    line(0, 98, max_x, 98);
 
-                for (int i = 0; i <= steps; ++i) {
+                    int delta_x = x2 - x1, delta_y = y2 - y1;
+                    int steps = max(abs(delta_x), abs(delta_y));
+                    float dx = delta_x / (float)steps;
+                    float dy = delta_y / (float)steps;
+                    float x = x1, y = y1;
+
+                    for (int i = 0; i <= steps; ++i) {
+                        drawCar(round(x) - 88, round(y) - 40);
+                        delay(1);  // to see line being drawn
+                        x += dx;
+                        y += dy;
+
+                        setfillstyle(SOLID_FILL, WHITE);
+                        rectangle(0, 100, max_x - 1, max_y - 1);
+                        floodfill(2, 105, COLOR(163, 167, 176));
+                    }
                     drawCar(round(x) - 88, round(y) - 40);
-                    delay(1);  // to see line being drawn
-                    x += dx;
-                    y += dy;
-
-                    setfillstyle(SOLID_FILL, WHITE);
-                    rectangle(0, 100, max_x - 1, max_y - 1);
-                    floodfill(2, 105, COLOR(163, 167, 176));
                 }
-                drawCar(round(x) - 88, round(y) - 40);
+                break;
             }
-            break;
-        }
         }
     }
 
